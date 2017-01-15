@@ -1,0 +1,91 @@
+{
+    "data": [{
+        "_uid": "88f869d",
+        "id": 1,
+        "name": "饮料",
+        "pinyin": "yinliao",
+        "py": "yl",
+        "selected": false,
+        "child": [{
+            "_uid": "7496c10",
+            "id": 11,
+            "name": "可乐",
+            "pinyin": "kele",
+            "py": "kl",
+            "selected": false,
+            "child": [{
+                "_uid": "7496c11",
+                "id": 111,
+                "name": "coca cola",
+                "pinyin": "cocacola",
+                "py": "cocacola",
+                "avatar": "img/A.png",
+                "selected": true
+            }, {
+                "_uid": "7496c12",
+                "id": 112,
+                "name": "百事",
+                "pinyin": "baishi",
+                "py": "bs",
+                "selected": false,
+                "child": [{
+                    "_uid": "7496c12",
+                    "id": 1111,
+                    "name": "tin",
+                    "pinyin": "tin",
+                    "py": "tin",
+                    "avatar": "img/A1.png",
+                    "selected": true
+                }, {
+                    "_uid": "7496c13",
+                    "id": 1112,
+                    "name": "bottle",
+                    "pinyin": "bottle",
+                    "py": "bottle",
+                    "avatar": "img/A2.png",
+                    "selected": true
+                }]
+            }]
+        }]
+    }, {
+        "_uid": "7496c14",
+        "id": 2,
+        "name": "fruit",
+        "pinyin": "fruit",
+        "py": "fruit",
+        "selected": false,
+        "child": [{
+            "_uid": "7496c15",
+            "id": 11,
+            "name": "apple",
+            "pinyin": "apple",
+            "py": "apple",
+            "selected": false,
+            "child": [{
+                "_uid": "7496c16",
+                "id": 111,
+                "name": "big apple",
+                "pinyin": "bigapple",
+                "py": "bigapple",
+                "avatar": "img/A3.png",
+                "selected": false
+            }, {
+                "_uid": "7496c17",
+                "id": 112,
+                "name": "small apple",
+                "pinyin": "smallapple",
+                "py": "smallapple",
+                "avatar": "img/A4.png",
+                "selected": false
+            }, {
+                "_uid": "7496c18",
+                "id": 113,
+                "name": "苹果",
+                "pinyin": "pingguo",
+                "py": "pg",
+                "avatar": "img/A5.png",
+                "selected": false
+            }]
+        }]
+    }]
+}

@@ -1,0 +1,292 @@
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+
+.caret-down {
+  content: "";
+  border-bottom: 0;
+  border-top: 4px dashed;
+  border-top: 4px solid\9;
+}
+
+.caret-right {
+  content: "";
+  border-right: 0;
+  border-left: 4px dashed;
+  border-left: 4px solid\9;
+}
+.caretDown {
+  content: "";
+  border-bottom: 0;
+  border-top: 4px dashed;
+  border-top: 4px solid\9;
+}
+
+.caretRight {
+  content: "";
+  border-right: 0;
+  border-left: 4px dashed;
+  border-left: 4px solid\9;
+}
+
+.receiver-block, .dataDisplay{
+	padding: 10px 15px;
+	margin: 15px 0;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.1);
+}
+.receiver-view {
+    position: relative;
+}
+.receiver-view .receiver-header {
+    font-size: 12px;
+    color: gray;
+    font-weight: 400;
+}
+.receiver-view .receiver-members {
+    margin: 10px 0 -5px -10px;
+    padding-left: 0;
+}
+.receiver-view .receiver-members>li {
+    position: relative;
+    float: left;
+    margin: 0 0 10px 10px;
+    list-style: none;
+}
+.receiver-view .receiver-members>li>.avatar {
+    display: block;
+    width: 24px;
+    height: 24px;
+    transition: -webkit-transform 2.11s ease-in-out;
+}
+.receiver-view .add-receiver-handler {
+    display: block;
+    font-size: 24px;
+    color: #a6a6a6;
+    cursor: pointer;
+}
+.receiver-view .add-receiver-handler .icon-circle-cross {
+    background-color: #03a9f4;
+    border-radius: 50%;
+    display: block;
+    width: 24px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+}
+/*删除选择的item*/
+.receiver-view .receiver-members>li .remove-member-handler {
+    display: block;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    opacity: 0;
+    background-color: rgba(0,0,0,.3);
+    color: #d9d9d9;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 200;
+    line-height: 20px;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    transition: opacity 218ms ease;
+    cursor: pointer;
+}
+.receiver-view .receiver-members>li .remove-member-handler:hover{
+	text-decoration: none;
+	opacity: 1;
+}
+/*svg icon style*/
+.receiver-view .icon, .member-menu-view .icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  stroke-width: 0;
+  stroke: currentColor;
+  fill: currentColor;
+}
+.icon-plus, .icon-tag, .icon-check{
+    color: #A6A6A6;
+    width: 18px!important;
+}
+.icon-check{
+    position: absolute;
+    right: 15px;
+}
+.icon-plus{
+    color: white;
+    width: 14px!important;
+}
+
+/*popover*/
+.popover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 106;
+    width: auto;
+    max-width: none;
+    padding: 0;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 7px 21px rgba(0,0,0,.1);
+    box-shadow: 0 7px 21px rgba(0,0,0,.1);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    /*display: block;*/
+}
+.member-in-drag, .member-menu-view {
+    box-shadow: 0 7px 21px rgba(0,0,0,.1);
+}
+.member-menu-view {
+    border-radius: 4px;
+}
+.popover-content {
+    padding: 15px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.member-menu-view .popover-content {
+    padding: 0;
+}
+.member-menu-view .popover-content .menu-input {
+    position: relative;
+    padding: 15px 15px 10px;
+}
+.form-control {
+    height: 38px;
+    padding: 8px 12px;
+    color: #383838;
+    box-shadow: none;
+}
+input.form-control, textarea.form-control {
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 3px;
+}
+.member-menu-view .popover-content .form-control {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 6px;
+    line-height: 20px;
+}
+
+ol, p, ul {
+    margin: 0;
+    padding: 0;
+}
+.list-inline, .list-unstyled {
+    list-style: none;
+}
+.member-menu-view .popover-content .members{
+	max-height: 200px;
+    overflow-y: auto;
+}
+.member-menu-view .popover-content ul {
+    padding: 0;
+    /*max-height: 200px;*/
+    /*overflow-y: auto;*/
+    -webkit-overflow-scrolling: touch;
+}
+.member-menu-view .popover-content li.active {
+    background-color: #f7f7f7;
+    font-weight: 700;
+}
+.member-menu-view .popover-content li>a {
+    display: block;
+    padding: 5px 35px 5px 5px;
+    margin-left: 15px;
+    clear: both;
+    line-height: 24px;
+    color: gray;
+    outline: 0;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.member-menu-view .members ul{
+	padding-left: 15px;
+}
+.involve-view .involve-member-add, .member-menu-view .popover-content li.selected {
+    position: relative;
+}
+.img-circle {
+    border-radius: 50%;
+}
+.avatar {
+    background-size: cover!important;
+    background-repeat: no-repeat!important;
+    background-position: 50%!important;
+}
+.member-menu-view .popover-content li>a>.avatar, .member-menu-view .popover-content li>a>.icon {
+    width: 24px;
+    height: 24px;
+    float: left;
+    margin-left: -2px;
+    margin-right: 10px;
+    text-align: center;
+    background-size: 24px 24px;
+    font-size: 18px;
+    line-height: 24px;
+    left: inherit;
+    bottom: inherit;
+}
+.member-menu-view .popover-content li>a span {
+    display: inline-block;
+    vertical-align: top;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*展开收起*/
+.member-item .more{
+    position: absolute;
+    left: 0;
+    top: 5px;
+    padding-right: 10px;
+}
+
+/*
+ *  scrollbar custom
+ */
+
+.thin-scroll::-webkit-scrollbar-track
+{
+	background-color: #fff;
+	border-left: 2px solid transparent;
+}
+
+.thin-scroll::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb
+{
+	background-color: #ddd;
+	border-left: 2px solid transparent;
+}
+
+/*为了弹出框的定位*/
+.wrap{
+    position: relative;
+}
+
+
+
