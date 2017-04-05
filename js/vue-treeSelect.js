@@ -243,6 +243,10 @@
                         this.searchFor(this.originData, val);
                         this.data = this.searchData;
                     }
+                },
+                "chosen": function(val, oldVal) {
+                    var chosen = this.getChosenData();
+                    Options.callback(chosen);
                 }
             },
             methods: {

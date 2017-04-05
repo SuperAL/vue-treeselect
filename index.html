@@ -97,6 +97,10 @@
         (function(Options) {
             // 填充数据请求的地址，用于初始化 树形选择插件 的数据
             Options.reqUrl = "data.json";
+            // 每次选中或者取消选中的回调函数
+            Options.callback = function(chosen) {
+                console.log('每次选中或者取消选中：', chosen);
+            }
         })(window.Options = {})
     </script>
     
