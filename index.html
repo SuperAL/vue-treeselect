@@ -46,7 +46,59 @@
         </div>
 
         <!-- popover组件，用于选择或搜索 -->
-        <div class="popover member-menu-view bottom in" id="popover" style="min-width: 245px; z-index: 999;">
+        <div class="popover member-menu-view bottom in" style="min-width: 245px; z-index: 999;">
+            <div class="popover-content">
+                <div class="menu-input">
+                    <input class="filter-input form-control" placeholder="查找成员" v-model="keyword">
+                </div>
+                <div class="members thin-scroll">
+                    <ul class="list-unstyled">
+                        <li class="member-item selected" v-for="item in data" track-by="_uid">
+                            <child :item="item" :childlength="item['child']?item['child'].length:0"></child>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 父组件 2-->
+    <div class="wrap container" id="parent2">
+        <div class="row">
+            <div class="col-xs-12 receiver-block">
+                <div class="receiver-view">
+                    <div class="receiver-header">
+                        <span>选择参与者</span>
+                    </div>
+                    <!-- 显示选中项 -->
+                    <ul class="receiver-members clearfix">
+                        <li class="receiver-member" v-for="item in chosen" data-toggle="tooltip" title="{{ item.name }}">
+                            <div class="avatar img-circle" v-bind:style="{ backgroundImage: 'url(' + item.avatar + ')' }">
+                            </div>
+                            <a class="remove-member-handler" @click="removeItem(item)">×</a>
+                        </li>
+                        <li class="receiver-member-add" data-toggle="tooltip" title="添加成员">
+                            <a class="add-receiver-handler clearfix" title="">
+                                <span class="icon-circle-cross">
+                                    <svg class="icon icon-plus"><use xlink:href="img/icon.svg#icon-plus"></use></svg>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 可删除，用于测试获取选中数据-->
+        <div class="row">
+            <div class="col-xs-12 dataDisplay">
+                <button class="btn btn-default getChosenData2" type="button" style="margin-bottom: 20px;">getChosenData</button>
+                <div class="chosenDataDisplay"></div>
+            </div>
+        </div>
+
+        <!-- popover组件，用于选择或搜索 -->
+        <div class="popover member-menu-view bottom in" style="min-width: 245px; z-index: 999;">
             <div class="popover-content">
                 <div class="menu-input">
                     <input class="filter-input form-control" placeholder="查找成员" v-model="keyword">
@@ -66,7 +118,7 @@
     <script type="text/javascript" src="js/jquery.min.js"></script>
     <!-- 引入 bootstrap 是为了使用 popover -->
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
-    <!-- 引入 Vue.js v1.0.28 用于实现该 树形选择插件（包括搜索功能） 的数据操作 -->
+    <!-- 引入 Vue.js v1.0.28 用于实现该 树形选择控件（包括搜索功能） 的数据操作 -->
     <script type="text/javascript" src="js/vue.min.js"></script>
 
     <!-- 子组件模板，用于展示 popover 中的可选择项 -->
@@ -94,17 +146,34 @@
     </script>
 
     <script>
-        (function(Options) {
-            // 填充数据请求的地址，用于初始化 树形选择插件 的数据
-            Options.reqUrl = "data.json";
-            // 每次选中或者取消选中的回调函数
-            Options.callback = function(chosen) {
+        (function(treeSelect) {
+            // 同一页面使用多次 树形选择控件
+            //  treeSelect.随意命名 = {
+            //      id: 'parent', // 父组件 id
+            //      reqUrl: 'data.json', // 数据请求地址
+            //      callback: function(chosen) {} // 回调函数
+            //  }
+            treeSelect.member = {
+                id: 'parent',
+                // 填充数据请求的地址，用于初始化 树形选择控件 的数据
+                reqUrl: 'data.json',
+                // 每次选中或者取消选中的回调函数
+                callback: function(chosen) {
                 console.log('每次选中或者取消选中：', chosen);
+                }
             }
-        })(window.Options = {})
+            treeSelect.plugin_name = {
+                id: 'parent2',
+                // 填充数据请求的地址，用于初始化 树形选择控件 的数据
+                reqUrl: 'data.json',
+                // 每次选中或者取消选中的回调函数
+                callback: function(chosen) {
+                console.log('每次选中或者取消选中：', chosen);
+                }
+            }
+        })(window.treeSelect = {})
     </script>
-    
-    <!-- 初始化 树形选择插件 -->
+    <!-- 初始化 树形选择控件 -->
     <script type="text/javascript" src="js/vue-treeSelect.js"></script>
 
     <!-- 其他 js 代码 -->
@@ -128,9 +197,15 @@
         // 获取选中数据按钮的点击事件绑定
         $('.getChosenData').on('click', function() {
             // treeSelect.vm.getChosenData() 获取所选项的数据
-            var chosenData = treeSelect.vm.getChosenData();
+            var chosenData = treeSelect.member.vm.getChosenData();
             console.log(chosenData);
-            $('.chosenDataDisplay').html(showProps(chosenData, 'chosenData'));
+            $('.getChosenData+.chosenDataDisplay').html(showProps(chosenData, 'chosenData'));
+        })
+        $('.getChosenData2').on('click', function() {
+            // treeSelect.vm.getChosenData() 获取所选项的数据
+            var chosenData = treeSelect.plugin_name.vm.getChosenData();
+            console.log(chosenData);
+            $('.getChosenData2+.chosenDataDisplay').html(showProps(chosenData, 'chosenData'));
         })
     </script>
 </body>

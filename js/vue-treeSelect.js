@@ -1,4 +1,5 @@
-    (function(Vue, Options, treeSelect) {
+    (function(Vue, treeSelect) {
+        console.log(treeSelect);
         // 初始化页面中的 tooltip
         $('[data-toggle="tooltip"]').tooltip();
 
@@ -191,131 +192,139 @@
             }
         })
 
-        // 初始化父组件
-        treeSelect.vm = new Vue({
-            el: '#parent',
-            data: {
-                data: [],
-                originData: [],
-                originDataSet: false,
-                searchData: [],
-                chosen: [],
-                keyword: ""
-            },
-            ready: function() {
-                var self = this;
-                // 使用 ajax 获取数据
-                $.ajax({
-                    url: Options.reqUrl,
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function(data) {
-                        self.data = data.data;
-                        console.log('Hooray!');
+        // 循环初始化多个 树型选择控件
+        for( var key in treeSelect ){
+            console.log(treeSelect[key]);
+            // 初始化父组件
+            treeSelect[key]['vm'] = new Vue({
+                el: '#'+treeSelect[key]['id'],
+                data: {
+                    data: [],
+                    originData: [],
+                    originDataSet: false,
+                    searchData: [],
+                    chosen: [],
+                    keyword: ""
+                },
+                ready: function() {
+                    var self = this;
+                    // 使用 ajax 获取数据
+                    $.ajax({
+                        url: treeSelect[key]['reqUrl'],
+                        method: 'GET',
+                        dataType: 'json',
+                        success: function(data) {
+                            self.data = data.data;
+                            console.log('Hooray!');
+                        },
+                        error: function(error) {
+                            console.log(JSON.stringify(error));
+                        }
+                    });
+                },
+                watch: {
+                    // 监测搜索栏的输入
+                    "keyword": function(val, oldVal) {
+                        if (!this.originDataSet) {
+                            // 将当前数据存放起来，用于恢复搜索后的数据显示
+                            this.originData = this.data;
+                            this.originDataSet = true;
+                        }
+                        // 清空搜索数据
+                        this.searchData = [];
+                        // 搜索栏为空时
+                        if (val == "") {
+                            // 恢复搜索前的数据
+                            this.data = this.originData;
+                        // 搜索栏新增关键词时
+                        } else if (val.length >= oldVal.length) {
+                            // 在当前搜索数据中继续进行搜索
+                            this.searchFor(this.data, val);
+                            this.data = this.searchData;
+                        // 搜索栏减少关键词时
+                        } else {
+                            // 在原始数据中进行搜索
+                            this.searchFor(this.originData, val);
+                            this.data = this.searchData;
+                        }
                     },
-                    error: function(error) {
-                        console.log(JSON.stringify(error));
-                    }
-                });
-            },
-            watch: {
-                // 监测搜索栏的输入
-                "keyword": function(val, oldVal) {
-                    if (!this.originDataSet) {
-                        // 将当前数据存放起来，用于恢复搜索后的数据显示
-                        this.originData = this.data;
-                        this.originDataSet = true;
-                    }
-                    // 清空搜索数据
-                    this.searchData = [];
-                    // 搜索栏为空时
-                    if (val == "") {
-                        // 恢复搜索前的数据
-                        this.data = this.originData;
-                    // 搜索栏新增关键词时
-                    } else if (val.length >= oldVal.length) {
-                        // 在当前搜索数据中继续进行搜索
-                        this.searchFor(this.data, val);
-                        this.data = this.searchData;
-                    // 搜索栏减少关键词时
-                    } else {
-                        // 在原始数据中进行搜索
-                        this.searchFor(this.originData, val);
-                        this.data = this.searchData;
+                    "chosen": function(val, oldVal) {
+                        var chosen = this.getChosenData();
+                        treeSelect[key]['callback'](chosen);
                     }
                 },
-                "chosen": function(val, oldVal) {
-                    var chosen = this.getChosenData();
-                    Options.callback(chosen);
-                }
-            },
-            methods: {
-                // 搜索
-                searchFor: function(theObject, keyword) {
-                    keyword = keyword.toLowerCase();
-                    var result = null;
-                    if (theObject instanceof Array) {
-                        for (var i = 0; i < theObject.length; i++) {
-                            result = this.searchFor(theObject[i], keyword);
-                            if (result) {
-                                break;
-                            }
-                        }
-                    } else {
-                        for (var prop in theObject) {
-                            if (prop == 'name' || prop == 'pinyin' || prop == 'py') {
-                                if (theObject[prop].toLowerCase().indexOf(keyword) !== -1) {
-                                    var index = this.searchData.indexOf(theObject);
-                                    if (index == -1) {
-                                        this.searchData.push(theObject);
-                                    }
-
-                                }
-                            }
-                            if (theObject[prop] instanceof Object || theObject[prop] instanceof Array) {
-                                result = this.searchFor(theObject[prop], keyword);
+                methods: {
+                    // 搜索
+                    searchFor: function(theObject, keyword) {
+                        keyword = keyword.toLowerCase();
+                        var result = null;
+                        if (theObject instanceof Array) {
+                            for (var i = 0; i < theObject.length; i++) {
+                                result = this.searchFor(theObject[i], keyword);
                                 if (result) {
                                     break;
                                 }
                             }
-                        }
-                    }
-                    return result;
-                },
-                // 删除选中项
-                removeItem: function(item) {
-                    $(".tooltip.fade.top.in").remove();
-                    this.$broadcast('removeItem', item);
-                },
-                // 获取选中数据
-                getChosenData: function() {
-                    var chosenData = JSON.parse(JSON.stringify(this.$data.chosen));
-                    return chosenData;
-                }
-            }
-        })
+                        } else {
+                            for (var prop in theObject) {
+                                if (prop == 'name' || prop == 'pinyin' || prop == 'py') {
+                                    if (theObject[prop].toLowerCase().indexOf(keyword) !== -1) {
+                                        var index = this.searchData.indexOf(theObject);
+                                        if (index == -1) {
+                                            this.searchData.push(theObject);
+                                        }
 
-        // 展示隐藏模态框 popover
-        $(document).on('click', '.receiver-member-add', function(e) {
-            var height = $(this).height();
-            var width = $("#popover").width() / 2 - $(this).height() / 2;
-            var offsetLeft = $(this).offset().left - $(this).closest('.wrap').offset().left;
-            var offsetTop = $(this).offset().top - $(this).closest('.wrap').offset().top;
-            $("#popover").css({
-                "top": offsetTop + height,
-                "left": (offsetLeft - width) > 0 ? (offsetLeft - width) : 0,
-                "display": "block"
-            }); 
-            $(".filter-input").trigger('focus');
-            e.stopPropagation();
-        });
-        $(document).on('click', '#popover, .receiver-member', function(e) {
+                                    }
+                                }
+                                if (theObject[prop] instanceof Object || theObject[prop] instanceof Array) {
+                                    result = this.searchFor(theObject[prop], keyword);
+                                    if (result) {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        return result;
+                    },
+                    // 删除选中项
+                    removeItem: function(item) {
+                        $(".tooltip.fade.top.in").remove();
+                        this.$broadcast('removeItem', item);
+                    },
+                    // 获取选中数据
+                    getChosenData: function() {
+                        var chosenData = JSON.parse(JSON.stringify(this.$data.chosen));
+                        return chosenData;
+                    }
+                }
+            })
+
+            var add = '#'+treeSelect[key]['id']+' .receiver-member-add';
+            console.log(add);
+            $(add).on('click', function(e){
+                var popover = $(e.target).parents('.container').find('.popover');
+                console.log('#'+treeSelect[key]['id']+' .popover');
+                var height = $(this).height();
+                var width = $(popover).width() / 2 - $(this).height() / 2;
+                var offsetLeft = $(this).offset().left - $(this).closest('.wrap').offset().left;
+                var offsetTop = $(this).offset().top - $(this).closest('.wrap').offset().top;
+                $(popover).css({
+                    "top": offsetTop + height,
+                    "left": (offsetLeft - width) > 0 ? (offsetLeft - width) : 0,
+                    "display": "block"
+                }); 
+                $(".filter-input").trigger('focus');
+                e.stopPropagation();
+            })
+        }
+
+        $(document).on('click', '.popover , .receiver-member', function(e) {
             e.stopPropagation();
         });
         $(document).on('click', function() {
-            $("#popover").css({
+            $('.popover').css({
                 "display": "none"
             });
         })
 
-    })(Vue, Options, window.treeSelect = {})
+    })(Vue, treeSelect)
